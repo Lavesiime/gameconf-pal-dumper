@@ -11,20 +11,20 @@ if len(sys.argv) < 3:
     print("    This would generate a palette file called GameConfPal.act in the same directory as gameconf-pal-dumper.py")
     exit()
 
-inFile = open(sys.argv[1], 'rb')
-outFile = open(sys.argv[2], 'wb')
+GameConf = open(sys.argv[1], 'rb')
+PalFile = open(sys.argv[2], 'wb')
 
 byteCount = 0
 
 # Read how many bytes the title is and skip it
-byteCount = inFile.read(1)
+byteCount = GameConf.read(1)
 byteCount = int.from_bytes(byteCount, "big") # Convert it from bytes to int because read() only works with ints
-inFile.read(byteCount)
+GameConf.read(byteCount)
 
 # Read how many bytes the game description is and skip this, too
-byteCount = inFile.read(1)
+byteCount = GameConf.read(1)
 byteCount = int.from_bytes(byteCount, "big")
-inFile.read(byteCount)
+GameConf.read(byteCount)
 
 # RSDKv4 palette count is 0x120 bytes, so read that many
 byteCount = 0x120
@@ -32,9 +32,9 @@ byteCount = 0x120
 # Keep on going until all 0x120 bytes are read
 while byteCount > 0:
     # 3 bytes at a time, I could do more or less bytes at once but because RGB is 3 bytes this feels right
-    byte = inFile.read(3)
-    outFile.write(byte)
+    byte = GameConf.read(3)
+    PalFile.write(byte)
     byteCount -= 3
 
-inFile.close()
-outFile.close()
+GameConf.close()
+PalFile.close()
